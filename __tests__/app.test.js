@@ -35,7 +35,7 @@ describe('app tests', () => {
     const response = await request(app)
       .get('/api/v1/bikes');
 
-    expect(response.body).toEqual(bike);
+    expect(response.body).toEqual([bike]);
   });
 
   it('finds a bike in /bikes by id via GET', async() => {
@@ -69,12 +69,13 @@ describe('app tests', () => {
     const bike = await Bike.insert({ make: 'Crust', model: 'Romanceur', specialization: 'Touring Bike' });
 
     const response = await request(app)
-      .delete(`/api/v1/bikes/${bike.id}`)
-      .send({
-        make: 'Crust',
-        model: 'Romanceur with cargo fork',
-        specialization: 'Bike Truck'
-      });
-    expect(response.body).toEqual({});
+      .delete(`/api/v1/bikes/${bike.id}`);
+
+    expect(response.body).toEqual({
+      ...bike,
+      make: 'Crust',
+      model: 'Romanceur',
+      specialization: 'Touring Bike'
+    });
   });
 });
